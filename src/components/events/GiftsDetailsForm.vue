@@ -31,6 +31,7 @@
     <!-- ===== [New Feature] START ===== -->
 <form class="grid grid-cols-1 gap-y-6 md:gap-y-8" autocomplete="off">
   <!-- Giver Name (always full width) -->
+   <div class="p-1.25"></div>
   <div>
     <label for="giverName" class="block text-sm font-medium text-gray-700 mb-4">Giver Name</label>
     <input
