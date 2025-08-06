@@ -31,6 +31,20 @@ export default {
           900: '#003DB2',
           DEFAULT: '#3B81F6'
         },
+        // Wedding pink palette for gift tracker
+        wedding: {
+          50: '#FFF0F6',
+          100: '#FFE0ED',
+          200: '#FFB8D2',
+          300: '#FF8AB8',
+          400: '#FF5C9E',
+          500: '#FF2E84',
+          600: '#E0266F',
+          700: '#B31F59',
+          800: '#861843',
+          900: '#590F2D',
+          DEFAULT: '#FF2E84'
+        },
         // Standard gray scale
         gray: {
           50: '#F9FAFB',

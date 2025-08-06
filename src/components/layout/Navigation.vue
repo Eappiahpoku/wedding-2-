@@ -16,7 +16,9 @@
         <!-- ===== Left: Logo & App Name ===== -->
         <router-link to="/" class="flex items-center space-x-2 min-w-[48px] min-h-[48px]">
           <StratoneaLogo white />
-          <span class="text-base sm:text-xl font-semibold text-white">Stratonea Funeral</span>
+          <!-- ===== [New Feature] START ===== -->
+          <span class="text-base sm:text-xl font-semibold text-white">Wedding Gift Tracker</span>
+          <!-- ===== [New Feature] END ===== -->
         </router-link>
         <!-- ===== Desktop Navigation ===== -->
         <div class="hidden sm:flex sm:space-x-2 md:space-x-4">
@@ -113,11 +115,12 @@ import StratoneaLogo from '@/components/base/StratoneaLogo.vue'
 const isMobileMenuOpen = ref(false)
 
 // ===== Navigation Items =====
-// Stratonea guideline: Home, Donation Records, About, Contact
+// Stratonea guideline: Home, Gift Records, About, Contact
 const navItems = [
   { name: 'Home', path: '/' },
-  { name: 'Donation Records', path: '/donations' }, // <!-- ===== [New Feature] START ===== -->
+  { name: 'Records', path: '/gift-history' },
   { name: 'About', path: '/about' },
   { name: 'Contact', path: '/contact' }
 ]
+
 </script>

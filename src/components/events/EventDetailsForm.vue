@@ -1,17 +1,19 @@
 <!--
   EventDetailsForm.vue
-  Form section for event details (deceased info, event name, photo)
-  - Blue theme for formal/ceremony context
+  Form section for event details (recipient info, event name, photo)
+  - Pink theme for wedding context
   - Prominent photo upload
   - Mobile-first form layout
   - Stratonea-compliant: Save/Load/Clear event for Ghanaian workflow
+  - All context updated for wedding gift tracker
+  - <!-- ===== [New Feature] START ===== -->
 -->
 
 <template>
-  <div class="bg-white rounded-lg shadow-md border-l-4 border-[white] overflow-hidden">
+  <div class="bg-white rounded-lg shadow-md border-l-4  overflow-hidden">
     <!-- Section Header -->
-    <div class="bg-blue-50 px-6 py-4 border-b border-blue-100">
-      <h2 class="text-lg font-semibold text-blue-800 flex items-center">
+    <div class="bg-pink-50 px-6 py-4 border-b border-pink-100">
+      <h2 class="text-lg font-semibold text-pink-800 flex items-center">
         <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect width="18" height="18" x="3" y="4" rx="2"/>
           <path d="M16 2v4"/>
@@ -24,7 +26,7 @@
         </svg>
         Event Details
       </h2>
-      <p class="text-sm text-blue-600 mt-1">Information about the funeral event</p>
+      <p class="text-sm text-pink-600 mt-1">Information about the wedding event</p>
     </div>
     
     <!-- Event Form Fields -->
@@ -32,24 +34,24 @@
       <!-- Photo Upload - Made Prominent -->
       <div class="text-center">
         <label class="block text-sm font-medium text-gray-700 mb-3">
-          Photo of Deceased
+          Photo of Recipient
         </label>
         <div class="flex flex-col items-center">
           <!-- Photo Preview -->
-          <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-gray-200 overflow-hidden bg-gray-100 mb-4 shadow-lg">
+          <div class="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-pink-200 overflow-hidden bg-pink-50 mb-4 shadow-lg">
             <img
               :src="photoPreview || defaultPhoto"
-              alt="Deceased"
+              alt="Recipient"
               class="w-full h-full object-cover"
             />
           </div>
           <!-- File Input -->
           <input
-            id="deceased-photo"
+            id="recipient-photo"
             type="file"
             accept="image/*"
             @change="handlePhotoUpload"
-            class="w-full max-w-xs text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100 file:cursor-pointer"
+            class="w-full max-w-xs text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-600 hover:file:bg-pink-100 file:cursor-pointer"
           />
         </div>
       </div>
@@ -64,24 +66,24 @@
           :value="modelValue.eventName"
           @input="updateField('eventName', $event)"
           type="text"
-          class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base transition-colors"
-          placeholder="e.g., Funeral Service, Memorial Service"
+          class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-base transition-colors"
+          placeholder="e.g., Wedding Ceremony, Engagement Party"
           required
         />
       </div>
 
-      <!-- Deceased Name -->
+      <!-- Recipient Name -->
       <div>
-        <label for="deceased-name" class="block text-sm font-medium text-gray-700 mb-2">
-          Name of Deceased *
+        <label for="recipient-name" class="block text-sm font-medium text-gray-700 mb-2">
+          Name of Recipient *
         </label>
         <input
-          id="deceased-name"
-          :value="modelValue.deceasedName"
-          @input="updateField('deceasedName', $event)"
+          id="recipient-name"
+          :value="modelValue.recipientName"
+          @input="updateField('recipientName', $event)"
           type="text"
-          class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base transition-colors"
-          placeholder="Enter the full name of the deceased"
+          class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-base transition-colors"
+          placeholder="Enter the full name of the recipient"
           required
         />
       </div>
@@ -91,7 +93,7 @@
       <div class="flex flex-col sm:flex-row gap-2 pt-2">
         <button
           type="button"
-          class="flex-1 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
+          class="flex-1 bg-wedding text-white font-semibold py-2 px-4 rounded-lg hover:bg-wedding-dark transition-colors"
           @click="saveEvent"
         >
           Save Event
@@ -122,14 +124,15 @@
 <script setup lang="ts">
 // ===== Types & Interfaces =====
 /**
- * EventData: Structure for event details
+ * EventData: Structure for event details (wedding context)
  * Props: modelValue (event data), photoPreview (image URL)
+ * <!-- ===== [New Feature] START ===== -->
  */
 import { ref } from 'vue'
 
 interface EventData {
   eventName: string
-  deceasedName: string
+  recipientName: string
 }
 
 interface Props {
@@ -149,9 +152,9 @@ const emit = defineEmits<{
 const defaultPhoto = 'https://placehold.co/100x100/EFEFEF/333333?text=Photo'
 
 // ===== [New Feature] START =====
-// LocalStorage keys for event persistence
-const EVENT_KEY = 'stratonea-funeral-event'
-const PHOTO_KEY = 'stratonea-funeral-event-photo'
+// LocalStorage keys for event persistence (wedding context)
+const EVENT_KEY = 'stratonea-wedding-event'
+const PHOTO_KEY = 'stratonea-wedding-event-photo'
 
 // Message state for user feedback
 const eventMessage = ref('')
@@ -239,7 +242,7 @@ function clearEvent() {
   try {
     localStorage.removeItem(EVENT_KEY)
     localStorage.removeItem(PHOTO_KEY)
-    emit('update:modelValue', { eventName: '', deceasedName: '' })
+    emit('update:modelValue', { eventName: '', recipientName: '' })
     emit('update:photoPreview', '')
     eventMessage.value = 'Event cleared.'
     eventMessageColor.value = 'text-gray-600'

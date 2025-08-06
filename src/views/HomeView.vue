@@ -1,11 +1,13 @@
 <!--
   HomeView.vue
-  Main page for the Funeral Donation Tracker app.
+  Main page for the Wedding Gift Tracker app.
   - Composed of reusable components
   - Stratonea-compliant: Mobile-first, responsive, Ghana-optimized
   - Manages state and data flow between components
   - Handles local storage for offline persistence
+  - All context updated for wedding gift tracker
   - ===== [Layout Change] START ===== Responsive vertical stacking, touch targets, and padding ===== [Layout Change] END =====
+  <!-- ===== [New Feature] START ===== -->
 -->
 
 <template>
@@ -16,8 +18,8 @@
     <main class="flex-1 w-full max-w-lg mx-auto px-2 sm:px-4 py-4">
       <!-- Page Title and Description -->
       <div class="text-center mb-6">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-700">Create New Donation</h1>
-        <p class="text-gray-500 mt-2">Fill in the details below to generate an official donation receipt</p>
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-700">Create New Wedding Gift Record</h1>
+        <p class="text-gray-500 mt-2">Fill in the details below to generate an official wedding gift receipt</p>
       </div>
 
       <!-- ===== [Layout Change] START ===== Main Layout: Responsive Vertical Stack ===== -->
@@ -30,14 +32,14 @@
             v-model:photo-preview="photoPreview"
           />
 
-          <!-- Donation Details Form -->
-          <DonationDetailsForm v-model="donationDetails" />
+          <!-- Gift Details Form -->
+          <DonationDetailsForm v-model="giftDetails" />
         </div>
 
         <!-- ===== Live Receipt Preview ===== -->
         <div>
           <ReceiptPreview 
-            :donation-data="combinedDonationData"
+            :gift-data="combinedGiftData"
             :photo-preview="photoPreview"
           />
         </div>
@@ -56,36 +58,69 @@
 // ===== Imports =====
 import { ref, computed, watch, onMounted } from 'vue'
 import EventDetailsForm from '@/components/events/EventDetailsForm.vue'
-import DonationDetailsForm from '@/components/events/DonationDetailsForm.vue'
+import DonationDetailsForm from '@/components/events/GiftsDetailsForm.vue'
 import ReceiptPreview from '@/components/events/ReceiptPreview.vue'
 import OfflineIndicator from '@/components/events/OfflineIndicator.vue'
 
 // ===== Types & Interfaces =====
+// ===== Types & Interfaces =====
+/**
+ * EventData: Structure for event details (wedding context)
+ * GiftDetails: Structure for gift details (wedding context)
+ * CombinedGiftData: Combines event and gift details for preview/receipt
+ * <!-- ===== [New Feature] START ===== -->
+ */
 interface EventData {
+  /**
+   * eventName: Name of the wedding event (e.g., Wedding Ceremony, Engagement)
+   */
   eventName: string
-  deceasedName: string
+  /**
+   * recipientName: Name of the person or couple receiving the gift
+   */
+  recipientName: string
 }
 
-interface DonationDetails {
-  donorName: string
-  doneeName: string
-  amountPaid: number
+interface GiftDetails {
+  /**
+   * giverName: Name of the person giving the gift
+   */
+  giverName: string
+  /**
+   * recipientName: Name of the person or couple receiving the gift (should match eventData.recipientName)
+   */
+  recipientName: string
+  /**
+   * giftDescription: Description of the gift (e.g., Blender, Cash, Gift Card)
+   */
+  giftDescription: string
+  /**
+   * giftValue: Estimated value of the gift in GHS (for record-keeping)
+   */
+  giftValue: number
+  /**
+   * paymentMode: How the gift was delivered (e.g., Cash, Mobile Money, Bank Transfer)
+   */
   paymentMode: string
+  /**
+   * phoneNumber: Contact number of the giver (for follow-up or thanks)
+   */
   phoneNumber: string
 }
 
-interface CombinedDonationData extends EventData, DonationDetails {}
+interface CombinedGiftData extends EventData, GiftDetails {}
 
 // ===== Reactive State =====
 const eventData = ref<EventData>({
   eventName: '',
-  deceasedName: ''
+  recipientName: ''
 })
 
-const donationDetails = ref<DonationDetails>({
-  donorName: '',
-  doneeName: '',
-  amountPaid: 0,
+const giftDetails = ref<GiftDetails>({
+  giverName: '',
+  recipientName: '',
+  giftDescription: '',
+  giftValue: 0,
   paymentMode: 'Cash',
   phoneNumber: ''
 })
@@ -93,39 +128,39 @@ const donationDetails = ref<DonationDetails>({
 const photoPreview = ref<string>('')
 
 // ===== Computed Properties =====
-const combinedDonationData = computed<CombinedDonationData>(() => ({
+const combinedGiftData = computed<CombinedGiftData>(() => ({
   ...eventData.value,
-  ...donationDetails.value
+  ...giftDetails.value
 }))
 
 // ===== Local Storage Functions =====
 /**
- * Saves form data and photo preview to localStorage for offline support.
+ * Saves form data and photo preview to localStorage for offline support (wedding context).
  */
 function saveToLocalStorage() {
   try {
-    localStorage.setItem('funeral-donation-event', JSON.stringify(eventData.value))
-    localStorage.setItem('funeral-donation-details', JSON.stringify(donationDetails.value))
-    localStorage.setItem('funeral-donation-photo', photoPreview.value)
+    localStorage.setItem('wedding-event', JSON.stringify(eventData.value))
+    localStorage.setItem('wedding-gift-details', JSON.stringify(giftDetails.value))
+    localStorage.setItem('wedding-gift-photo', photoPreview.value)
   } catch (error) {
     console.warn('Could not save to localStorage:', error)
   }
 }
 
 /**
- * Loads form data and photo preview from localStorage on mount.
+ * Loads form data and photo preview from localStorage on mount (wedding context).
  */
 function loadFromLocalStorage() {
   try {
-    const savedEventData = localStorage.getItem('funeral-donation-event')
-    const savedDonationDetails = localStorage.getItem('funeral-donation-details')
-    const savedPhoto = localStorage.getItem('funeral-donation-photo')
+    const savedEventData = localStorage.getItem('wedding-event')
+    const savedGiftDetails = localStorage.getItem('wedding-gift-details')
+    const savedPhoto = localStorage.getItem('wedding-gift-photo')
     
     if (savedEventData) {
       eventData.value = { ...eventData.value, ...JSON.parse(savedEventData) }
     }
-    if (savedDonationDetails) {
-      donationDetails.value = { ...donationDetails.value, ...JSON.parse(savedDonationDetails) }
+    if (savedGiftDetails) {
+      giftDetails.value = { ...giftDetails.value, ...JSON.parse(savedGiftDetails) }
     }
     if (savedPhoto) {
       photoPreview.value = savedPhoto
@@ -136,9 +171,9 @@ function loadFromLocalStorage() {
 }
 
 // ===== Watchers =====
-// Auto-save data when it changes
+// Auto-save data when it changes (wedding context)
 watch(eventData, saveToLocalStorage, { deep: true })
-watch(donationDetails, saveToLocalStorage, { deep: true })
+watch(giftDetails, saveToLocalStorage, { deep: true })
 watch(photoPreview, saveToLocalStorage)
 
 // ===== Lifecycle =====

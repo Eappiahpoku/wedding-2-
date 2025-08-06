@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
+// ===== App Main Routes =====
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('../layouts/default.vue'),
+    // Main app pages (wedding gift tracker)
     children: [
       {
         path: '',
@@ -16,20 +18,22 @@ const routes: RouteRecordRaw[] = [
         name: 'about',
         component: () => import('../views/AboutView.vue')
       },
-      
       {
         path: 'contact',
         name: 'contact',
         component: () => import('../views/ContactView.vue')
       },
+      // ===== [New Feature] START =====
+      // Gift history/records page (rename file to GiftHistoryView.vue for clarity if desired)
       {
-    path: '/donations',
-    name: 'DonationHistory',
-    component: () => import ('../views/DonationHistoryView.vue')
-  }
+        path: 'gift-history',
+        name: 'gift-history',
+        component: () => import('../views/DonationHistoryView.vue')
+      }
+      // ===== [New Feature] END =====
     ]
   },
-  
+  // ===== Error/Fallback Routes =====
   {
     path: '/:pathMatch(.*)*',
     component: () => import('../layouts/ErrorLayout.vue'),
